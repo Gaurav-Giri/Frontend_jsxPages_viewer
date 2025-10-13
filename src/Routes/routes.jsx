@@ -1,6 +1,6 @@
 import React, { lazy } from "react";
 import ProtectedRoute, { PublicRoute } from "./ProtectedRoutes.jsx";
-const NotFoundPage = lazy(() => import("../Pages/error-pages/NotFoundPage.jsx"));
+const NotFoundPage = lazy(() => import("../pages/error-pages/NotFoundPage.jsx"));
 
 const LoginPage = lazy(() => import("../pages/LoginPage/LoginPage.jsx"));
 
@@ -23,4 +23,5 @@ export const ROUTES = [
     element: <NotFoundPage />,
     name: "notFound",
   },
+
 ];
