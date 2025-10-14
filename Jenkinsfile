@@ -1,49 +1,39 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "myapp"
-    }
-
     stages {
-        stage('Clone') {
+        stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/Gaurav-Giri/Frontend_jsxPages_viewer.git'
             }
         }
 
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Build React App') {
+            steps {
+                sh 'npm run build'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build("${IMAGE_NAME}:latest")
-                }
+                sh 'docker build -t myfrontend:latest .'
             }
         }
 
-        stage('Test Container') {
+        stage('Run Docker Container') {
             steps {
-                script {
-                    docker.image("${IMAGE_NAME}:latest").inside {
-                        sh 'echo Running tests...'
-                    }
-                }
+                sh '''
+                    docker stop myfrontend || true
+                    docker rm myfrontend || true
+                    docker run -d -p 3000:80 --name myfrontend myfrontend:latest
+                '''
             }
-        }
-
-        stage('Deploy') {
-            steps {
-                script {
-                    sh "docker stop ${IMAGE_NAME} || true"
-                    sh "docker rm ${IMAGE_NAME} || true"
-                    sh "docker run -d --name ${IMAGE_NAME} -p 5000:5000 ${IMAGE_NAME}:latest"
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            echo 'Cleaning up...'
         }
     }
 }
