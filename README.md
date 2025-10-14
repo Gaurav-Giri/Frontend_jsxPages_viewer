@@ -10,6 +10,9 @@ finally dont forget to correctly palce the page in pages folder along with the c
 -------------------------------------------------------------------------------
 i have included the not found page .jsx too so you will see a default page when no page at that destination is found . 
 
+happy coding!!
+
+
 
 
 
