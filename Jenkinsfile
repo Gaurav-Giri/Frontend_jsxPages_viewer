@@ -1,10 +1,15 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE = 'frontend-react-app'
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/Gaurav-Giri/Frontend_jsxPages_viewer.git'
+                // You can safely use checkout scm (uses main automatically)
+                checkout scm
             }
         }
 
@@ -22,14 +27,28 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t frontend-app .'
+                bat 'docker build -t %DOCKER_IMAGE% .'
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                bat 'docker run -d -p 3000:3000 frontend-app'
+                // Stop old container if running
+                bat '''
+                docker stop frontend-container || true
+                docker rm frontend-container || true
+                docker run -d -p 3000:80 --name frontend-container %DOCKER_IMAGE%
+                '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Build and deployment successful!'
+        }
+        failure {
+            echo '❌ Build failed. Check logs.'
         }
     }
 }
