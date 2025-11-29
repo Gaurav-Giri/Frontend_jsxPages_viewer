@@ -34,7 +34,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true,
-    port: 3000,
+    port: 9860,
     proxy: {
       // API proxy - use relative path
       '/api': {
@@ -52,4 +52,5 @@ export default defineConfig({
       }
     }
   }
+
 });
