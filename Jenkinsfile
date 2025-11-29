@@ -8,36 +8,34 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                // You can safely use checkout scm (uses main automatically)
                 checkout scm
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm install'
+                sh 'npm install'
             }
         }
 
         stage('Build React App') {
             steps {
-                bat 'npm run build'
+                sh 'npm run build'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t %DOCKER_IMAGE% .'
+                sh 'docker build -t $DOCKER_IMAGE .'
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                // Stop old container if running
-                bat '''
-                docker stop frontend-container || true
-                docker rm frontend-container || true
-                docker run -d -p 9860:80 --name frontend-container %DOCKER_IMAGE%
+                sh '''
+                    docker stop frontend-container || true
+                    docker rm frontend-container || true
+                    docker run -d -p 9860:80 --name frontend-container $DOCKER_IMAGE
                 '''
             }
         }
@@ -52,3 +50,4 @@ pipeline {
         }
     }
 }
+
