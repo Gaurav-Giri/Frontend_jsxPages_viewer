@@ -37,7 +37,7 @@ pipeline {
                 bat '''
                 docker stop frontend-container || true
                 docker rm frontend-container || true
-                docker run -d -p 3000:80 --name frontend-container %DOCKER_IMAGE%
+                docker run -d -p 9860:80 --name frontend-container %DOCKER_IMAGE%
                 '''
             }
         }
